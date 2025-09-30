@@ -1,8 +1,21 @@
-
-# Dev
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 .venv/
 **/.venv/
-.mypy_cache/
+
+# Caches
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Streamlit
+.streamlit/
+
 # App data
 data/
+
+# OS
+.DS_Store
