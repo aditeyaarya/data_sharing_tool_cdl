@@ -1,0 +1,5 @@
+[theme]
+base="light"
+backgroundColor="#FAF9F6"   # Ivory Beige (outer background)
+primaryColor="#3B2F2F"      # Espresso Brown (buttons, accents)
+textColor="#333333"         # Dark Gray for text

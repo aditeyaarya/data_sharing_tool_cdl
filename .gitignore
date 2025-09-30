@@ -12,7 +12,8 @@ __pycache__/
 .ruff_cache/
 
 # Streamlit
-.streamlit/
+.streamlit/*
+!.streamlit/config.toml
 
 # App data
 data/
