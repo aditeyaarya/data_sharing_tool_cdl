@@ -1,0 +1,14 @@
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["."]
+exclude = [".git",".venv","**/.venv","**/site-packages",".mypy_cache","__pycache__","build","dist"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_ignores = true
+warn_return_any = true
+ignore_missing_imports = true
+files = ["core", "services", "ui", "tests"]   # <- targets live here
+exclude = "(\\.venv|/site-packages/|\\.mypy_cache/)"
+

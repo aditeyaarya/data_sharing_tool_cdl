@@ -1,0 +1,8 @@
+
+# Dev
+.venv/
+**/.venv/
+.mypy_cache/
+.pytest_cache/
+# App data
+data/
