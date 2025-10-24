@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+**/.venv/
+
+# Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Streamlit
+.streamlit/*
+!.streamlit/config.toml
+
+# App data
+data/
+
+# OS
+.DS_Store
+credentials.json
+token.json

@@ -1,0 +1,135 @@
+/* === Google Fonts === */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Merriweather:wght@600&display=swap');
+
+/* === Global Text === */
+html, body, [class*="css"] {
+  font-family: 'Inter', sans-serif !important;
+  color: #333333 !important;
+}
+
+/* === Headings Default === */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif !important;
+  font-weight: 600;
+}
+
+/* === Header Section (logo + title bar) === */
+[data-testid="block-container"] > div:first-child {
+  background: #F1EFEB;          /* beige header strip */
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+}
+
+/* Logo column inside header */
+[data-testid="block-container"] > div:first-child .stImage img {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  margin-right: 1rem;
+}
+
+/* Main Title (next to logo) */
+[data-testid="block-container"] > div:first-child h1 {
+  font-size: 2.4rem !important;
+  font-weight: 700 !important;
+  color: #3B2F2F !important;  /* Espresso */
+  text-shadow: 0 1px 2px rgba(59,47,47,0.15);
+  margin: 0;
+  text-align: left;
+}
+
+/* Subtitle (below title, same column) */
+[data-testid="block-container"] > div:first-child h2 {
+  font-size: 1.25rem !important;
+  font-weight: 400 !important;
+  color: #5C4033 !important;   /* Taupe */
+  margin-top: 0.2rem;
+  margin-bottom: 0;
+  text-align: left;
+  position: relative;
+}
+
+/* Accent line under subtitle */
+[data-testid="block-container"] > div:first-child h2::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 3px;
+  background: #2F6F6E;   /* Muted Teal */
+  margin-top: 0.5rem;
+  border-radius: 2px;
+}
+
+/* === Form Container (Box) === */
+[data-testid="stForm"] {
+  background-color: #E9F1EC !important; /* Pale Sage Green */
+  padding: 1.5rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  border: 1px solid #BFC6C2; /* subtle border */
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Inputs stay white */
+[data-baseweb="base-input"] input,
+[data-baseweb="textarea"] textarea,
+.stTextInput input,
+.stTextArea textarea,
+.stNumberInput input,
+.stSelectbox [data-baseweb="select"] div[role="combobox"],
+.stMultiSelect [data-baseweb="select"] div[role="combobox"] {
+  background-color: #ffffff !important;
+  border-radius: 6px;
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+/* Input focus ring */
+[data-baseweb="base-input"] input:focus,
+[data-baseweb="textarea"] textarea:focus,
+.stTextInput input:focus,
+.stTextArea textarea:focus,
+.stNumberInput input:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(59,47,47,0.25) !important; /* espresso */
+}
+
+/* Section dividers inside the form */
+[data-testid="stForm"] .stTextInput,
+[data-testid="stForm"] .stNumberInput,
+[data-testid="stForm"] .stTextArea,
+[data-testid="stForm"] .stSelectbox,
+[data-testid="stForm"] .stMultiSelect,
+[data-testid="stForm"] .stDateInput {
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #D0D4D2;
+}
+
+/* Buttons */
+.stButton button {
+  background-color: #3B2F2F !important; /* Espresso */
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+.stButton button:hover {
+  background-color: #5C4033 !important; /* Taupe */
+  transform: translateY(-1px);
+}
+
+/* Links */
+a, .stMarkdown a {
+  color: #2F6F6E !important; /* Muted Teal */
+  font-weight: 500;
+}
