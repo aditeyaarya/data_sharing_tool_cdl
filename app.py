@@ -22,7 +22,7 @@ with header:
     col_logo, col_title = st.columns([1, 6], vertical_alignment="center")
 
     with col_logo:
-        logo_path = Path("logo.png")  # or Path("assets/logo.png")
+        logo_path = Path("logo.jpeg")  # or Path("assets/logo.png")
         if logo_path.exists():
             st.image(str(logo_path), width=300)
         else:
