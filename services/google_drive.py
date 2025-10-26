@@ -9,15 +9,23 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
+# ---------------------------------------------------------------------
+# --------------------------- CONFIG ---------------------------------
+# ---------------------------------------------------------------------
 
 SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 CREDENTIALS_FILE = os.getenv("GOOGLE_DRIVE_CREDENTIALS", "credentials.json")
 TOKEN_FILE = os.getenv("GOOGLE_DRIVE_TOKEN", "token.json")
 
 
+# ---------------------------------------------------------------------
+# -------------------- AUTHENTICATION SETUP ---------------------------
+# ---------------------------------------------------------------------
+
 def _get_drive_service():
     """Load or refresh OAuth token and return Google Drive service."""
     creds = None
+
     if os.path.exists(TOKEN_FILE):
         creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
 
@@ -37,20 +45,29 @@ def _get_drive_service():
     return build("drive", "v3", credentials=creds)
 
 
+# ---------------------------------------------------------------------
+# --------------------------- FILE HELPERS ----------------------------
+# ---------------------------------------------------------------------
+
 def _find_existing_file_id(service, name: str, folder_id: Optional[str]) -> Optional[str]:
-    """Check if a file with given name already exists inside folder."""
-    query = [f"name='{name}'", "trashed=false"]
+    """Check if a file with the given name already exists inside the folder."""
+    # Avoid f-string backslash issues by using simple concatenation
+    query_parts = ["name = '" + name.replace("'", "\\'") + "'", "trashed = false"]
     if folder_id:
-        query.append(f"'{folder_id}' in parents")
-    q = " and ".join(query)
-    res = service.files().list(q=q, fields="files(id,name)").execute()
+        query_parts.append(f"'{folder_id}' in parents")
+    query = " and ".join(query_parts)
+
+    res = service.files().list(q=query, fields="files(id,name)").execute()
     files = res.get("files", [])
     return files[0]["id"] if files else None
 
 
 def get_or_create_folder(service, folder_name: str = "CDL Intake Data") -> str:
     """Find or create the folder in Drive, return its ID."""
-    query = f"mimeType='application/vnd.google-apps.folder' and name='{folder_name}' and trashed=false"
+    query = (
+        "mimeType='application/vnd.google-apps.folder' "
+        f"and name='{folder_name}' and trashed=false"
+    )
     res = service.files().list(q=query, fields="files(id,name)").execute()
     folders = res.get("files", [])
     if folders:
@@ -63,6 +80,10 @@ def get_or_create_folder(service, folder_name: str = "CDL Intake Data") -> str:
     folder = service.files().create(body=folder_metadata, fields="id").execute()
     return folder["id"]
 
+
+# ---------------------------------------------------------------------
+# ------------------------- SYNC FUNCTION -----------------------------
+# ---------------------------------------------------------------------
 
 def sync_csv_to_drive(local_csv_path: str, remote_name: str = "entries.csv") -> Tuple[str, bool]:
     """
