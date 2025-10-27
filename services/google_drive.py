@@ -109,7 +109,7 @@ def get_or_create_folder(service, folder_name: str = "CDL Intake Data") -> str:
     return folder["id"]
 
 
-def sync_csv_to_drive(local_csv_path: str, remote_name: str = "entries.csv") -> Tuple[str, bool]:
+def sync_csv_to_drive(local_csv_path: str, remote_name: str = "test_final.csv") -> Tuple[str, bool]:
     """
     Uploads or updates CSV to Google Drive inside 'CDL Intake Data' folder.
     Returns (file_id, created_flag)
