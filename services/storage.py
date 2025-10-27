@@ -9,7 +9,7 @@ except ImportError:
     sync_csv_to_drive = None
 
 DATA_DIR = "data"
-CSV_PATH = os.path.join(DATA_DIR, "entries.csv")
+CSV_PATH = os.path.join(DATA_DIR, "test_final.csv")
 
 
 def ensure_data_dir() -> None:
