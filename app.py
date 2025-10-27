@@ -46,6 +46,6 @@ submitted, payload = intake_form()
 
 if submitted and payload is not None:
     append_entry(payload)
-    st.success("Entry saved to data/entries.csv ✅")
+    st.success("Entry saved and synced ✅")
     with st.expander("Preview last submission"):
         st.json(payload.model_dump())
