@@ -8,21 +8,28 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 
+# ---------------------------------------------------------------------
+# ----------------------- CONFIGURATION -------------------------------
+# ---------------------------------------------------------------------
+
 # ----------------------- CONFIG -----------------------
 SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 CREDENTIALS_FILE = os.getenv("GOOGLE_DRIVE_CREDENTIALS", "credentials.json")
 TOKEN_FILE = os.getenv("GOOGLE_DRIVE_TOKEN", "token.json")
 OAUTH_MODE = os.getenv("GOOGLE_OAUTH_MODE", "local").lower()  # "local" | "console"
 
-# Default upload name, overridable via .env
-DEFAULT_UPLOAD_NAME = "test.csv"
-UPLOAD_NAME = os.getenv("GOOGLE_DRIVE_UPLOAD_NAME", DEFAULT_UPLOAD_NAME) or DEFAULT_UPLOAD_NAME
 
 # -------------------- AUTH HELPERS --------------------
 def _escape_single_quotes(s: str) -> str:
     return s.replace("'", "\\'")
 
 def _run_oauth_console(flow: InstalledAppFlow) -> Credentials:
+    """
+    Manual console OAuth for headless servers.
+    Prints an auth URL, reads the code from stdin, fetches credentials.
+    Also supports non-interactive mode via GOOGLE_OAUTH_CODE env var.
+    """
+    # Generate a URL that the user can open in a browser
     auth_url, _ = flow.authorization_url(
         access_type="offline",
         include_granted_scopes="true",
@@ -32,7 +39,13 @@ def _run_oauth_console(flow: InstalledAppFlow) -> Credentials:
     print("1) Open this URL in your browser:\n", auth_url)
     print("\n2) Copy the authorization code.")
     code_env = os.getenv("GOOGLE_OAUTH_CODE")
-    code = code_env.strip() if code_env else input("\n3) Paste authorization code here: ").strip()
+    if code_env:
+        code = code_env.strip()
+        print("\nUsing authorization code from GOOGLE_OAUTH_CODE env var.")
+    else:
+        code = input("\n3) Paste the authorization code here and press Enter: ").strip()
+
+    # Exchange the code for tokens
     flow.fetch_token(code=code)
     return flow.credentials
 
@@ -50,12 +63,17 @@ def _get_drive_service():
                     f"Google Drive credentials not found at {os.path.abspath(CREDENTIALS_FILE)}"
                 )
             flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
-            creds = _run_oauth_console(flow) if OAUTH_MODE == "console" else flow.run_local_server(port=0)
+            if OAUTH_MODE == "console":
+                creds = _run_oauth_console(flow)
+            else:
+                # Will fail on headless droplets; only use on your laptop
+                creds = flow.run_local_server(port=0)
+
         with open(TOKEN_FILE, "w") as token:
             token.write(creds.to_json())
     return build("drive", "v3", credentials=creds)
 
-# -------------------- DRIVE OPS -----------------------
+
 def _find_existing_file_id(service, name: str, folder_id: Optional[str]) -> Optional[str]:
     name_escaped = _escape_single_quotes(name)
     query_parts = [f"name = '{name_escaped}'", "trashed = false"]
@@ -80,7 +98,8 @@ def get_or_create_folder(service, folder_name: str = "CDL Intake Data") -> str:
     folder = service.files().create(body=folder_metadata, fields="id").execute()
     return folder["id"]
 
-def sync_csv_to_drive(local_csv_path: str, remote_name: str = UPLOAD_NAME) -> Tuple[str, bool]:
+
+def sync_csv_to_drive(local_csv_path: str, remote_name: str = "test_final.csv") -> Tuple[str, bool]:
     """
     Uploads or updates CSV to Google Drive inside 'CDL Intake Data' folder.
     Returns (file_id, created_flag)
