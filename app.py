@@ -14,31 +14,27 @@ def load_css(path: str = "style.css"):
     else:
         st.warning(f"Custom CSS not found at: {css_file.resolve()}")
 
-load_css("style.css")  # make sure your file is named styles.css
+load_css("style.css")
 
-# ---- Header: Logo + Title (corporate dashboard style) ----
+# ---- Header: Image + Title ----
 header = st.container()
 with header:
-    col_logo, col_title = st.columns([1, 6], vertical_alignment="center")
+    photo_path = Path("banner.jpeg")  # <-- your image file (rename as needed)
+    if photo_path.exists():
+        st.image(str(photo_path), use_container_width=True)
+    else:
+        st.markdown("<div style='font-size:2rem;'>🗂️</div>", unsafe_allow_html=True)
 
-    with col_logo:
-        logo_path = Path("logo.jpeg")  # or Path("assets/logo.png")
-        if logo_path.exists():
-            st.image(str(logo_path), width=300)
-        else:
-            # graceful fallback if the logo is missing
-            st.markdown(
-                "<div style='font-size:2rem;line-height:1;'>🗂️</div>",
-                unsafe_allow_html=True
-            )
-
-    with col_title:
-        # Using markdown keeps our CSS header styles intact
-        st.markdown("<h1>Data Sharing Tool</h1>", unsafe_allow_html=True)
-        st.markdown(
-            "<h2>Enter the details below.</h2>",
-            unsafe_allow_html=True
-        )
+    # Centered title + subtitle below image
+    st.markdown(
+        """
+        <div style='text-align:center; margin-top:1rem;'>
+            <h1 style='margin-bottom:0;'>Data Sharing Tool</h1>
+            <h2 style='color:gray; font-weight:400;'>Enter the details below.</h2>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # ---- Ensure storage and render form ----
 ensure_data_dir()
