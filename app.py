@@ -19,7 +19,7 @@ load_css("style.css")
 # ---- Header: Image + Title ----
 header = st.container()
 with header:
-    photo_path = Path("banner.jpeg")  # <-- your image file (rename as needed)
+    photo_path = Path("logo.jpeg")  # <-- your image file (rename as needed)
     if photo_path.exists():
         st.image(str(photo_path), use_container_width=True)
     else:
